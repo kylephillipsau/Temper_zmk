@@ -87,6 +87,15 @@ draw_config:
         stroke: gray;
         fill: none;
     }
+    /* keys that wipe pairings or reboot the half: look but don't touch */
+    rect.danger {
+        fill: #ffd8a8;
+    }
+
+    /* solid background so the dark text stays readable on GitHub's dark theme */
+    svg {
+        background-color: #ffffff;
+    }
 parse_config:
   assign_combos_to_layers: false
   preprocess: true
@@ -160,6 +169,8 @@ parse_config:
     UNDS: _
     SPACE: ⎵
   raw_binding_map:
+    '&bt BT_CLR_ALL': {t: "CLEAR\nBT", type: danger}
+    '&bootloader': {t: "BOOT\nLOADER", type: danger}
     '&mm_grescm': {t: '⎋', s: '` ~'}
     '&mm_bspc_del': {t: '⌫', s: '⌦'}
     '&bspc_del': {t: '⌫', s: '⌦'}
@@ -197,7 +208,27 @@ parse_config:
     '&ltog LGUI 8': {t: "Cancel\nFunc", h: '⌘'}
     '&ltog LGUI 9': {t: "Cancel\nAdjust", h: '⌘'}
   skip_binding_parsing: false
+  zmk_combos:
+    a: {l: [Base]}
+    b: {l: [Base]}
+    c: {l: [Base]}
+    d: {l: [Base]}
+    e: {l: [Base]}
+    f: {l: [Base]}
+    g: {l: [Base]}
+    h: {l: [Base]}
   zmk_keycode_map:
+    BACKSPACE: ⌫
+    DELETE: ⌦
+    ENTER: ⏎
+    ESC: Esc
+    SPACE: Space
+    LEFT_WIN: ⌘
+    CLCK: Caps
+    LEFT_ARROW: ←
+    RIGHT_ARROW: →
+    UP_ARROW: ↑
+    DOWN_ARROW: ↓
     AMPERSAND: '&'
     AMPS: '&'
     APOS: {t: "'", s: '"'}
