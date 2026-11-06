@@ -376,6 +376,9 @@ class Sheet:
             x, y = self.place(part["x"], part["y"])
             w, h = part["w"] * self.scale, part["h"] * self.scale
             out += f'<rect x="{x - w / 2:.2f}" y="{y - h / 2:.2f}" width="{w:.2f}" height="{h:.2f}" fill="{BLACK}" stroke="{WHITE}" stroke-width="1.25"/>'
+            if part.get("label"):
+                out += f'<g transform="rotate(-90 {x:.2f} {y:.2f})">'
+                out += self.ink.draw(part["label"], x, y + 5, 14) + "</g>"
         for s in self.board.screens:
             cx, cy = self.place(s["x"], s["y"])
             w, h = s["w"] * self.scale, s["h"] * self.scale

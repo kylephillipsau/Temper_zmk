@@ -1,7 +1,8 @@
 # Short Temper
 
-Personal ZMK config for a Temper, a 36-key wireless split keyboard with a nice!nano v2 and a
-nice!view screen on each half. It's based on the seller's repo
+Personal ZMK config for a Temper, a 36-key wireless split keyboard. Each half has a ProMicro
+NRF52840 controller, a clone of the nice!nano v2, and a connector for an optional nice!view screen.
+The screens only go on at a desk, and the firmware builds for them either way. It's based on the seller's repo
 ([Sifan6688/Temper_zmk](https://github.com/Sifan6688/Temper_zmk), kept as the `upstream` remote).
 
 ## Keymap
@@ -238,7 +239,7 @@ uv run keymap_img/draw.py keymap_img/blueprint.yaml
 ## Troubleshooting
 
 - **The bootloader keys don't work:** this keyboard has no reset button. The original Temper design
-  has one, but it isn't fitted here. Use tweezers to briefly bridge the `RST` and `GND` pins on the
+  has one, but it isn't fitted here, and the clone controllers don't have one either. Use tweezers to briefly bridge the `RST` and `GND` pins on the
   controller twice, quickly, with USB connected. Check the labels first, because bridging `GND` and
   the battery pin next to it is a short circuit.
 - **A half looks dead on battery but works on USB:** it needs charging. USB powers it either way,
