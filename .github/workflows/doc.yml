@@ -5,21 +5,25 @@ on:
   push:               # automatically run on changes to following paths
     paths:
       - ".github/workflows/doc.yml"
-      - "keymap_img/keymap_drawer.config.yaml"
       - "config/*.keymap"
-      - "config/*.dtsi"
-      - "boards/*/*/*.keymap"
-      - "boards/*/*/*.dtsi"
+      - "keymap_img/keymap_drawer.config.yaml"
+      - "keymap_img/blueprint.yaml"
+      - "keymap_img/temper-board.yaml"
+      - "keymap_img/draw.py"
 
 jobs:
   draw:
-    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
+    runs-on: ubuntu-latest
     permissions:
-      contents: write  # allow workflow to commit to the repo
-    with:
-      commit_message: "doc: update keymap image"           # commit message for the changes
-      keymap_patterns: "config/*.keymap"                   # path to the keymaps to parse
-      config_path: "keymap_img/keymap_drawer.config.yaml"  # config file, ignored if it does not exist
-      output_folder: "keymap_img"                          # path to save produced SVG and keymap YAML files
-      parse_args: "temper:'-c 10'"                         # map of extra args to pass to `keymap parse`, e.g. "corne:'-l Def Lwr Rse' cradio:''"
-      draw_args: "temper:'-j config/temper.json'"      # map of extra args to pass to `keymap draw`, e.g. "corne:'-k corne_rotated' cradio:'-k paroxysm'"
+      contents: write  # allow the workflow to commit the drawings
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Parse the keymap
+        run: uvx --from keymap-drawer keymap -c keymap_img/keymap_drawer.config.yaml parse -c 10 -z config/temper.keymap > keymap_img/temper.yaml
+      - name: Draw the sheets
+        run: uv run keymap_img/draw.py keymap_img/blueprint.yaml
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "doc: update keymap image"
+          file_pattern: "keymap_img/*.svg keymap_img/*.yaml"

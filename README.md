@@ -6,19 +6,17 @@ nice!view screen on each half. It's based on the seller's repo
 
 ## Keymap
 
-![Temper keymap: Base, NUM, SYM, NAV and SYSTEM layers](keymap_img/temper.svg)
+![How to read the drawings: tap, tap or hold, same as the layer below, does nothing, held to reach this layer, take care, and combo](keymap_img/temper-key.svg)
 
-How to read the diagram:
+![Base layer](keymap_img/temper-base.svg)
+![NUM layer: numbers, F keys, media and volume](keymap_img/temper-num.svg)
+![SYM layer: symbols, Delete and Bluetooth slots](keymap_img/temper-sym.svg)
+![NAV layer: arrows, Home, End, Page Up, Page Down, Tab, Esc and modifiers](keymap_img/temper-nav.svg)
+![SYSTEM layer: bootloader, Bluetooth clearing, USB and Bluetooth toggle, and soft off](keymap_img/temper-system.svg)
 
-- **Big label:** what the key does when tapped.
-- **Small label at the bottom:** what it does when held. On the thumbs that's a layer or a modifier.
-- **Blue boxes between keys:** combos. Press the two keys around the box together.
-- **Red key:** the thumb key you're holding to reach that layer.
-- **Orange keys:** see [Keys to be careful with](#keys-to-be-careful-with).
-- **▽:** passes through to the layer underneath. A blank key does nothing.
-
-The diagram is generated from `config/temper.keymap`, so trust it over any notes here if they
-ever disagree.
+The drawings are generated from `config/temper.keymap`, so trust them over any notes here if they
+ever disagree. Key positions and the board outline come from the
+[Temper PCB](https://github.com/gurland/temper).
 
 ## Reaching the layers
 
@@ -183,8 +181,9 @@ These are still missing, and they're the next things to sort out:
 - **Power:** adds sleep and soft off. The key matrix needed `wakeup-source` to wake from sleep.
 - **SYSTEM layer:** the bootloader and Clear Bluetooth keys moved here from SYM, where rolling off
   Space could hit them. The right half also gets a bootloader key, which it never had.
-- **Diagram:** drawn from `config/temper.keymap` with the Temper's layout from `config/temper.json`.
-  The seller's workflow drew `boards/shields/temper/temper.keymap`, which the firmware doesn't use.
+- **Diagrams:** drawn from `config/temper.keymap` and the real PCB. The seller's workflow drew
+  `boards/shields/temper/temper.keymap`, which the firmware doesn't use, and `config/temper.json`
+  has the wrong stagger.
 - **Local tooling:** `build.sh` and `flash.sh`.
 
 ## Building and flashing
@@ -223,15 +222,18 @@ drive by hand, then flash left and right again. A reset clears that half's Bluet
 
 Pushing to GitHub also builds the firmware in Actions, if they're enabled on the repo.
 
-## Redrawing the diagram
+## Redrawing the diagrams
 
-`.github/workflows/doc.yml` redraws it when the keymap changes on GitHub and commits the result, so
+`.github/workflows/doc.yml` redraws them when the keymap changes on GitHub and commits the result, so
 run `git pull --rebase` before pushing again. To redraw locally:
 
 ```sh
 uvx --from keymap-drawer keymap -c keymap_img/keymap_drawer.config.yaml parse -c 10 -z config/temper.keymap > keymap_img/temper.yaml
-uvx --from keymap-drawer keymap -c keymap_img/keymap_drawer.config.yaml draw keymap_img/temper.yaml -j config/temper.json > keymap_img/temper.svg
+uv run keymap_img/draw.py keymap_img/blueprint.yaml
 ```
+
+`keymap parse` reads the keymap, and `keymap_img/draw.py` draws one sheet per layer. Settings are in
+`keymap_img/blueprint.yaml`, and `keymap_img/temper-board.yaml` holds the measured key positions.
 
 ## Troubleshooting
 
@@ -241,3 +243,10 @@ uvx --from keymap-drawer keymap -c keymap_img/keymap_drawer.config.yaml draw key
   the battery pin next to it is a short circuit.
 - **A half looks dead on battery but works on USB:** it needs charging. USB powers it either way,
   so leave it plugged in with the switch on for an hour or so.
+
+## Credits
+
+- [Temper](https://github.com/gurland/temper) by raeedcho is the keyboard design, under the CERN
+  Open Hardware Licence. The drawings use its key positions and board outline.
+- [keymap-drawer](https://github.com/caksoylar/keymap-drawer) parses the keymap.
+- [osifont](https://github.com/hikikomori82/osifont) is the lettering on the drawings.
