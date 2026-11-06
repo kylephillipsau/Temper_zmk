@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Flash one half: ./flash.sh left|right, then double-press that half's reset button.
+# Flash one half: ./flash.sh left|right, then hold both Space thumbs and press B (left) or N (right).
 #
 # Both halves' bootloaders mount as NICENANO, so this tells them apart by USB serial number, kept
 # in ~/.cache/temper-flash/<half>-serial after each half's first flash, and refuses to put one
@@ -12,7 +12,7 @@ uf2="$(cd "$(dirname "$0")" && pwd)/firmware/temper_$half.uf2"
 known="$HOME/.cache/temper-flash"
 mkdir -p "$known"
 
-echo "waiting for the $half half's bootloader drive (double-press its reset button)"
+echo "waiting for the $half half's bootloader drive (hold both Space thumbs, then B for left or N for right)"
 until [ -d /Volumes/NICENANO ]; do sleep 1; done
 sleep 1
 serial=$(ioreg -p IOUSB -l -w0 | python3 -c '

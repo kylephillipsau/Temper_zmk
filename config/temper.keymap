@@ -16,6 +16,9 @@
 
 &sk { quick-release; };
 
+/* Balanced so rolling off Enter into the next letter doesn't send Ctrl+letter */
+&mt { flavor = "balanced"; };
+
 &lt {
     flavor = "hold-preferred";
     quick-tap-ms = <180>;
@@ -121,6 +124,16 @@
         };
     };
 
+    /* Holding both Space thumbs opens SYSTEM, so its keys can't be hit by a fast roll */
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        system_layer {
+            if-layers = <1 2>;
+            then-layer = <4>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -131,7 +144,7 @@
   &kp Q  &kp W  &kp E                   &kp R        &kp T                 &kp Y        &kp U      &kp I      &kp O    &kp P
   &kp A  &kp S  &kp D                   &kp F        &kp G                 &kp H        &kp J      &kp K      &kp L    &kp SEMI
   &kp Z  &kp X  &kp C                   &kp V        &kp B                 &kp N        &kp M      &kp COMMA  &kp DOT  &kp FSLH
-                &lt 3 BACKSPACE         &lt 2 SPACE  &mt LCTRL LEFT_WIN    &lt 1 SPACE  &kp ENTER  &kp RSHFT
+                &lt 3 BACKSPACE         &kp LEFT_WIN  &lt 2 SPACE          &lt 1 SPACE  &mt RCTRL ENTER  &kp RSHFT
             >;
         };
 
@@ -151,8 +164,8 @@
             display-name = "SYM";
             bindings = <
   &kp EXCLAMATION  &kp AT        &kp HASH      &kp DOLLAR    &kp PERCENT       &kp CARET  &kp AMPERSAND  &kp ASTERISK  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS
-  &none            &kp LEFT      &kp DELETE    &kp RIGHT     &bt BT_CLR_ALL    &none      &none          &none         &none                 &none
-  &bt BT_SEL 3     &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &bootloader       &none      &none          &none         &none                 &none
+  &none            &kp LEFT      &kp DELETE    &kp RIGHT     &none             &kp LBKT   &kp RBKT       &kp GRAVE     &kp BSLH              &kp SQT
+  &bt BT_SEL 3     &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &none             &kp LBRC   &kp RBRC       &kp TILDE     &kp PIPE              &kp DQT
                                  &trans        &trans        &trans            &trans     &trans         &trans
             >;
         };
@@ -160,10 +173,21 @@
         layer_3 {
             display-name = "ARROWS";
             bindings = <
-  &kp LEFT_ARROW  &kp UP_ARROW    &none            &none   &trans    &trans  &trans  &trans  &trans  &trans
+  &kp LEFT_ARROW  &kp UP_ARROW    &none            &none   &trans    &trans  &trans  &trans  &trans  &kp BACKSPACE
   &none           &kp DOWN_ARROW  &kp RIGHT_ARROW  &none   &trans    &trans  &trans  &trans  &trans  &trans
   &trans          &none           &none            &trans  &trans    &trans  &trans  &trans  &trans  &trans
                                   &trans           &trans  &trans    &trans  &trans  &trans
+            >;
+        };
+
+        /* &bootloader runs on the half the key is on: B for left, N for right */
+        system {
+            display-name = "SYSTEM";
+            bindings = <
+  &none  &none  &none   &none   &none              &none        &none   &none  &none  &none
+  &none  &none  &none   &none   &bt BT_CLR_ALL     &none        &none   &none  &none  &none
+  &none  &none  &none   &none   &bootloader        &bootloader  &none   &none  &none  &none
+                &trans  &trans  &trans             &trans       &trans  &trans
             >;
         };
     };
