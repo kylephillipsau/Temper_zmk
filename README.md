@@ -1,4 +1,4 @@
-# Kyles Temper
+# Short Temper
 
 Personal ZMK config for a Temper, a 36-key wireless split keyboard with a nice!nano v2 and a
 nice!view screen on each half. It's based on the seller's repo
@@ -6,7 +6,7 @@ nice!view screen on each half. It's based on the seller's repo
 
 ## Keymap
 
-![Temper keymap: Base, NAV_NUM, SYM, ARROWS and SYSTEM layers](keymap_img/temper.svg)
+![Temper keymap: Base, NUM, SYM, NAV and SYSTEM layers](keymap_img/temper.svg)
 
 How to read the diagram:
 
@@ -28,11 +28,11 @@ you hold its thumb key. Holding both Space thumbs together opens SYSTEM.
 ```mermaid
 flowchart LR
     base["Base<br/>letters"]
-    arrows["ARROWS<br/>↑ ← ↓ →, Backspace"]
+    nav["NAV<br/>arrows, Home, End, Page Up, Page Down,<br/>Tab, Esc, modifiers"]
     sym["SYM<br/>symbols, Delete,<br/>Bluetooth"]
-    num["NAV_NUM<br/>numbers, Backspace"]
+    num["NUM<br/>numbers, F keys, media"]
     system["SYSTEM<br/>bootloader, clear Bluetooth"]
-    base -- "hold left outer thumb" --> arrows
+    base -- "hold left outer thumb" --> nav
     base -- "hold left inner thumb" --> sym
     base -- "hold right inner thumb" --> num
     sym -- "also hold right inner thumb" --> system
@@ -41,10 +41,10 @@ flowchart LR
 
 | Thumb key | Tap | Hold |
 |---|---|---|
-| Left outer | Backspace | ARROWS layer |
+| Left outer | Backspace | NAV layer |
 | Left middle | Cmd | Cmd |
 | Left inner | Space | SYM layer |
-| Right inner | Space | NAV_NUM layer |
+| Right inner | Space | NUM layer |
 | Right middle | Enter | Ctrl |
 | Right outer | Shift | Shift |
 
@@ -60,7 +60,29 @@ flowchart LR
 | Cmd shortcuts | Hold the left middle thumb, then the letter |
 | Ctrl shortcuts | Hold the right middle thumb, then the letter |
 | Delete | Hold the left inner thumb, then D |
-| Arrows | Hold the left outer thumb, then W (up), Q (left), S (down), D (right) |
+| Arrows | Hold the left outer thumb, then I (up), J (left), K (down), L (right) |
+| Home, End | Hold the left outer thumb, then U, O |
+| Page Up, Page Down | Hold the left outer thumb, then Y, H |
+| Tab, Esc | Hold the left outer thumb, then W, Q |
+| F1–F10 | Hold the right inner thumb, then the home row (A is F1, ; is F10) |
+| F11, F12 | Hold the right inner thumb, then Z, X |
+| Previous, Play, Next | Hold the right inner thumb, then N, M, comma |
+| Volume down, up, Mute | Hold the right inner thumb, then full stop, /, B |
+
+### Modifiers with navigation
+
+While you hold the left outer thumb, A, S, D and F are Ctrl, Option, Cmd and Shift, so your left hand
+holds modifiers and your right hand navigates:
+
+| To do | Hold the left outer thumb, then |
+|---|---|
+| Jump a word | S + J or L |
+| Select a word | S + F + J or L |
+| Jump to line start or end | D + J or L |
+| Switch apps (Cmd+Tab) | D + W, tapping W to move along |
+| Alt+Tab | S + W, tapping W to move along |
+
+Home and End scroll the whole document in many Mac apps, so use D + J or L to jump within a line.
 
 ### Combos
 
@@ -75,38 +97,70 @@ flowchart LR
 | J + K | `-` |
 | K + L | `=` |
 
-Combos work on every layer. The diagram only shows them on Base to keep the other layers readable.
+Combos only work on Base, so moving between arrows on a layer can't trigger them.
 
 U + I, I + O and X + C have a 30 ms window, so those keys need to land almost exactly together.
 The others have ZMK's default window.
 
 ### Timing
 
-If you hold a layer thumb within 180 ms of tapping it, you get the tap repeating instead of the
-layer. That's useful for repeating Backspace, but after a Space, pause briefly before holding the
-same thumb for numbers.
+The layer thumbs are tuned so fast typing stays reliable:
+
+- **While typing:** a thumb pressed within 125 ms of another key is always a tap, so pause briefly
+  after typing before you hold a thumb for a layer.
+- **Rolling:** if you release the thumb before the next key, it's a tap. To use a layer, hold the thumb
+  until you've released the other key, or for 200 ms.
+- **Repeating:** tap a thumb, then hold it within 180 ms, to repeat Space or Backspace.
 
 ## Keys to be careful with
 
-The first three are on the SYSTEM layer, so they need both Space thumbs held and can't be hit by
-accident while typing:
+SYSTEM keys need both Space thumbs held, so they can't be hit by accident while typing:
 
-| Keys | What it does |
+| Both Space thumbs + | What it does |
 |---|---|
-| Both Space thumbs + G | Clears **all** Bluetooth pairings. Every device has to be paired again. |
-| Both Space thumbs + B | Puts the left half into its bootloader. It stops typing and mounts as a `NICENANO` drive. |
-| Both Space thumbs + N | Puts the right half into its bootloader. |
-| Left inner thumb + Z, X, C, V | Switch to Bluetooth profiles 3, 2, 1 and 0. A device on another profile disconnects. |
+| G | Clears **all** Bluetooth pairings. Every device has to be paired again. |
+| T | Clears the selected Bluetooth slot. |
+| Y | Toggles between USB and Bluetooth. |
+| O, held for 2 seconds | Soft off for both halves. See [Power](#power). |
+| B | Puts the left half into its bootloader. It stops typing and mounts as a `NICENANO` drive. |
+| N | Puts the right half into its bootloader. |
+
+## Bluetooth
+
+There are five slots, and the keyboard types to one device at a time. While the left half is plugged
+into a computer it types over USB, so press both Space thumbs + Y to use Bluetooth instead.
+
+| Slot | Hold the left inner thumb, then |
+|---|---|
+| 0 | V |
+| 1 | C |
+| 2 | X |
+| 3 | Z |
+| 4 | A |
+
+To pair a device, select an unused slot and choose `Short Temper` in the device's Bluetooth settings.
+If you forget the keyboard on a device, select its slot and press both Space thumbs + T before
+pairing it again.
+
+## Power
+
+| State | How it starts | How to wake it |
+|---|---|---|
+| Sleep | Automatic after 15 idle minutes on battery | Any key on that half |
+| Soft off | Both Space thumbs + hold O for 2 seconds, then let go | Outer thumb on each half |
+| Off | Power switch | Power switch |
+
+Soft off is for wearing or carrying the keyboard. It turns off both halves at once, and only the
+outer thumbs can wake them, so stray presses on the other keys do nothing. Wake each half with its
+own outer thumb. If a half won't wake, unplug USB and turn its power switch off and on.
 
 ## Known gaps
 
 These are still missing, and they're the next things to sort out:
 
-- **Modifiers:** there's no Option key and no left Shift.
-- **Navigation:** no Home, End, Page Up or Page Down, despite the NAV_NUM name.
-- **Sleep:** neither half ever goes to sleep, so the batteries run down faster if the switches are
-  left on. The seller's `CONFIG_ZMK_SLEEP=y` is in `boards/shields/temper/temper.conf`, which the
-  build doesn't read. Moving it to `config/temper.conf` turns it on.
+- **Option:** it's only on the NAV layer, where the right hand's keys are navigation, so Option with a
+  right-hand letter doesn't work.
+- **Left Shift:** Shift on Base is only on the right outer thumb.
 
 ## What's different from upstream
 
@@ -119,7 +173,14 @@ These are still missing, and they're the next things to sort out:
 - **Punctuation:** the right side of the SYM layer has the brackets, quotes, backslash, pipe,
   backtick and tilde, which the seller's keymap left out. The bottom row is the home row shifted.
 - **Backspace on P:** hold the left outer thumb and press P.
-- **Layer name:** the fourth layer is called ARROWS.
+- **NAV layer:** the seller's ARROWS layer is now a full navigation layer on the right hand, with
+  modifiers on the left home row.
+- **NUM layer:** adds F keys, volume and media, and drops the spare Backspaces on H and J.
+- **Combos:** they only work on Base.
+- **Name:** advertises as Short Temper (`config/temper.conf`). `src/ble_name.c` replaces any older
+  name stored in settings.
+- **Bluetooth:** adds slot 4, a key to clear one slot, and a USB/Bluetooth toggle.
+- **Power:** adds sleep and soft off. The key matrix needed `wakeup-source` to wake from sleep.
 - **SYSTEM layer:** the bootloader and Clear Bluetooth keys moved here from SYM, where rolling off
   Space could hit them. The right half also gets a bootloader key, which it never had.
 - **Diagram:** drawn from `config/temper.keymap` with the Temper's layout from `config/temper.json`.

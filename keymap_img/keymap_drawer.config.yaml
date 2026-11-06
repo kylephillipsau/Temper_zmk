@@ -169,7 +169,10 @@ parse_config:
     UNDS: _
     SPACE: ⎵
   raw_binding_map:
-    '&bt BT_CLR_ALL': {t: "CLEAR\nBT", type: danger}
+    '&bt BT_CLR_ALL': {t: "CLEAR\nALL BT", type: danger}
+    '&bt BT_CLR': {t: "CLEAR\nSLOT", type: danger}
+    '&out OUT_TOG': "USB/\nBT"
+    '&soft_off': {t: "SOFT\nOFF", type: danger}
     '&bootloader': {t: "BOOT\nLOADER", type: danger}
     '&mm_grescm': {t: '⎋', s: '` ~'}
     '&mm_bspc_del': {t: '⌫', s: '⌦'}
@@ -225,6 +228,25 @@ parse_config:
     SPACE: Space
     LEFT_WIN: ⌘
     CLCK: Caps
+    PG_UP: PgUp
+    PG_DN: PgDn
+    HOME: Home
+    END: End
+    UP: ↑
+    DOWN: ↓
+    LEFT: ←
+    RIGHT: →
+    LCTRL: ⌃
+    LALT: ⌥
+    LGUI: ⌘
+    LSHFT: ⇧
+    TAB: ↹
+    C_PREV: ⏮
+    C_PP: ⏯
+    C_NEXT: ⏭
+    C_MUTE: Mute
+    C_VOL_UP: Vol+
+    C_VOL_DN: Vol-
     LEFT_ARROW: ←
     RIGHT_ARROW: →
     UP_ARROW: ↑

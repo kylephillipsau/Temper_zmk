@@ -1,3 +1,7 @@
+name: short-temper
 build:
+  # Folder containing a "CMakeLists.txt" (. = root)
+  cmake: .
   settings:
+    # Folder containing a "boards" folder (. = root)
     board_root: .

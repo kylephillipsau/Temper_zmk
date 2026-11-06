@@ -29,9 +29,34 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4)  RC(2,5) RC(2,6) RC(2,7) RC(2,8) RC(2,9)
         >;
     };
 
+    /*
+     * Soft off wakes on the outer thumb key. It's at the same row and column pins on both halves,
+     * so the column is driven high while off and the row is watched for the key press.
+     */
+    wake_keys {
+        compatible = "gpio-keys";
+
+        wake_key: wake_key {
+            gpios = <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+        };
+    };
+
+    wake_trigger: wake_trigger {
+        compatible = "zmk,gpio-key-wakeup-trigger";
+        trigger = <&wake_key>;
+        wakeup-source;
+        extra-gpios = <&pro_micro 19 GPIO_ACTIVE_HIGH>;
+    };
+
+    soft_off_wakers {
+        compatible = "zmk,soft-off-wakeup-sources";
+        wakeup-sources = <&wake_trigger>;
+    };
+
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         label = "KSCAN";
+        wakeup-source;
 
         diode-direction = "col2row";
         row-gpios
