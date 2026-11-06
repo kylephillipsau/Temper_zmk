@@ -68,6 +68,8 @@ flowchart LR
 | J + K | `-` |
 | K + L | `=` |
 
+Combos work on every layer. The diagram only shows them on Base to keep the other layers readable.
+
 U + I, I + O and X + C have a 30 ms window, so those keys need to land almost exactly together.
 The others have ZMK's default window.
 
@@ -136,7 +138,10 @@ flowchart LR
     other["Changed a .conf, config/west.yml<br/>or anything in boards/"] --> both["./build.sh<br/>./flash.sh left<br/>./flash.sh right"]
 ```
 
-The left half runs the keymap, so keymap changes only need the left half flashed.
+The left half runs the keymap, so keymap changes only need the left half flashed. The exception is
+the first flash: do both halves, so they aren't running different firmware. If they don't reconnect
+afterwards, run `./build.sh reset`, copy `firmware/temper_reset.uf2` onto each half's `NICENANO`
+drive by hand, then flash left and right again. A reset clears that half's Bluetooth pairings.
 
 Pushing to GitHub also builds the firmware in Actions, if they're enabled on the repo.
 
